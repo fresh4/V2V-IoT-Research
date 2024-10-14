@@ -13,25 +13,30 @@ def process(data: str):
     try:
         tpms_data = json.loads(data)
     except:
-        print("Could not parse input as json")
+        print("Could not parse input as json, got: ", data)
         return
     
     # Get vehicle speed from OBD sensor
     speed = get_speed()
 
     # Construct final data tuple and write to local database
-    output = (
-            tpms_data["time"], 
-            tpms_data["id"], 
-            tpms_data["model"], 
-            speed, 
-            tpms_data["temperature_F"], 
-            tpms_data["pressure_PSI"], 
-            tpms_data["noise"]
-            )
+    try:
+        output = (
+                tpms_data["time"], 
+                tpms_data["id"], 
+                tpms_data["model"], 
+                speed, 
+                tpms_data["temperature_F"], 
+                tpms_data["pressure_PSI"], 
+                tpms_data["noise"]
+                )
+    except:
+        print("Received signal is not TPMS, got: ", tpms_data)
+        return
+    
     write_tpms_to_sql(output)
 
-    print(tpms_data)
+    print(tpms_data, speed)
 
 def get_speed() -> float:
     speed = obd_connection.query(obd.commands.SPEED)
