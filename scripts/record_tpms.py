@@ -1,7 +1,12 @@
-import subprocess
 import sqlite3 as sql
-import sys, json, obd
+import json, obd
 import utils
+
+# NOTE:
+# This script operates by taking and parsing lines input into the script
+# from the command line. This means you need to "pipe" the outputs into this script.
+# It does not run the required command as a subprocess (though that might be a good idea).
+# See the record_tpms.sh script under /bash_scripts/ for actual use of this script.
 
 def process(data: str):
     # Parse piped data to json
@@ -47,7 +52,7 @@ if __name__ == "__main__":
     cursor = sql_connection.cursor()
     utils.create_tpms_table() # Creates sqlite db tables if they don't exist
 
-    # READ DATA STREAM FROM PIPED INPUT
+    # READ DATA STREAM FROM PIPED INPUT, ie:
     # rtl_433 -f 315M -M level -M time -C customary -F json | python3 scripts/record_tpms.py
     try:
         while True:
