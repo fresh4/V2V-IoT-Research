@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import json, obd
 import utils
-
+from utils import bcolors as c
 # NOTE:
 # This script operates by taking and parsing lines input into the script
 # from the command line. This means you need to "pipe" the outputs into this script.
@@ -13,7 +13,7 @@ def process(data: str):
     try:
         tpms_data = json.loads(data)
     except:
-        print("Could not parse input as json, got: ", data)
+        print(c.FAIL, "Could not parse input as json, got: ", c.ENDC, data)
         return
     
     # Get vehicle speed from OBD sensor
@@ -21,17 +21,20 @@ def process(data: str):
 
     # Construct final data tuple and write to local database
     try:
+        # TODO: If necessary, post-process data to get consistent key values.
+        freq = tpms_data.get("freq") or tpms_data.get("freq1")
         output = (
                 tpms_data["time"], 
                 tpms_data["id"], 
                 tpms_data["model"], 
                 speed, 
-                tpms_data["temperature_F"], 
+                tpms_data["temperature_F"],
                 tpms_data["pressure_PSI"], 
-                tpms_data["noise"]
+                tpms_data["noise"],
+                freq
                 )
     except:
-        print("Received signal is not TPMS, got: ", tpms_data)
+        print(c.FAIL, "Received signal is not TPMS, got: ", c.ENDC, tpms_data)
         return
     
     write_tpms_to_sql(output)
@@ -45,8 +48,8 @@ def get_speed() -> float:
 def write_tpms_to_sql(data: tuple):
     cursor.execute('''
         INSERT INTO TPMSSamples
-        (timestamp, id, model, speed, temperature, pressure, noise)
-        VALUES (?,?,?,?,?,?,?)
+        (timestamp, id, model, speed, temperature, pressure, noise, frequency)
+        VALUES (?,?,?,?,?,?,?,?)
     ''', data)
     sql_connection.commit()
     
