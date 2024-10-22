@@ -57,6 +57,7 @@ if __name__ == "__main__":
     # DEFINE PERSISTENT SERVICE CONNECTIONS
     obd_connection = obd.OBD()
     sql_connection = sql.connect("samples.db")
+    print("OBD Connected:", obd_connection.is_connected())
     cursor = sql_connection.cursor()
     utils.create_tpms_table() # Creates sqlite db tables if they don't exist
 

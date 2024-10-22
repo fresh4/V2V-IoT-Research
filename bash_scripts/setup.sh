@@ -5,7 +5,7 @@ cd ..
 FOLDER_NAME="env"
 
 # Install local software for RTL SDR
-sudo apt install rtl-sdr rtl_433 obd -y
+sudo apt install rtl-sdr rtl-433 -y
 
 if [-d "$FOLDER_NAME"]; then
     echo "Python environment already exists"
