@@ -57,9 +57,11 @@ if __name__ == "__main__":
     # DEFINE PERSISTENT SERVICE CONNECTIONS
     obd_connection = obd.OBD()
     sql_connection = sql.connect("samples.db")
-    print("OBD Connected:", obd_connection.is_connected())
     cursor = sql_connection.cursor()
     utils.create_tpms_table() # Creates sqlite db tables if they don't exist
+
+    connected = obd_connection.is_connected()
+    print(f"OBD Connected:{c.OKGREEN if connected else c.FAIL}", connected, c.ENDC)
 
     # READ DATA STREAM FROM PIPED INPUT, ie:
     # rtl_433 -f 315M -M level -M time -C customary -F json | python3 scripts/record_tpms.py
