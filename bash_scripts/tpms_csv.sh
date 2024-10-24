@@ -12,4 +12,4 @@ output_file="${output_file%.csv}"
 
 sqlite3 -header -csv samples.db "SELECT * FROM TPMSSamples;" > outputs/$output_file.csv 
 
-echo "Converted sql to csv under outputs/$outputfile.csv"
+echo "Converted sql to csv under outputs/$output_file"
