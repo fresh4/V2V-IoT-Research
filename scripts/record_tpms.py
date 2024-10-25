@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import json, obd
+import json, sys, obd
 import utils
 from utils import bcolors as c
 # NOTE:
@@ -31,6 +31,8 @@ def process(data: str):
                 tpms_data["temperature_F"],
                 tpms_data["pressure_PSI"], 
                 tpms_data["noise"],
+                tpms_data["rssi"],
+                tpms_data["snr"],
                 freq
                 )
     except:
@@ -48,17 +50,19 @@ def get_speed() -> float:
 def write_tpms_to_sql(data: tuple):
     cursor.execute('''
         INSERT INTO TPMSSamples
-        (timestamp, id, model, speed, temperature, pressure, noise, frequency)
-        VALUES (?,?,?,?,?,?,?,?)
+        (timestamp, id, model, speed, temperature, pressure, noise, RSSI, SNR, frequency)
+        VALUES (?,?,?,?,?,?,?,?,?,?)
     ''', data)
     sql_connection.commit()
     
 if __name__ == "__main__":
+    args = sys.argv
+    filename = args[1] if len(args) == 2 else "samples.db"
     # DEFINE PERSISTENT SERVICE CONNECTIONS
     obd_connection = obd.OBD()
-    sql_connection = sql.connect("samples.db")
+    sql_connection = sql.connect(filename)
     cursor = sql_connection.cursor()
-    utils.create_tpms_table() # Creates sqlite db tables if they don't exist
+    utils.create_tpms_table(filename) # Creates sqlite db tables if they don't exist
 
     connected = obd_connection.is_connected()
     print(f"OBD Connected:{c.OKGREEN if connected else c.FAIL}", connected, c.ENDC)

@@ -1,7 +1,7 @@
 import sqlite3
 
-def create_tpms_table():
-    conn = sqlite3.connect('samples.db')
+def create_tpms_table(filename="samples.db"):
+    conn = sqlite3.connect(filename)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS TPMSSamples
                     (
@@ -12,6 +12,8 @@ def create_tpms_table():
                         temperature REAL, 
                         pressure REAL, 
                         noise REAL, 
+                        RSSI REAL,
+                        SNR REAL,
                         frequency REAL
                     )''')
     conn.commit()
