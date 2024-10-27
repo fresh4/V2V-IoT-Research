@@ -21,7 +21,6 @@ def process(data: str):
 
     # Construct final data tuple and write to local database
     try:
-        # TODO: If necessary, post-process data to get consistent key values.
         freq = tpms_data.get("freq") or tpms_data.get("freq1")
         output = (
                 tpms_data["time"], 
@@ -75,4 +74,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         obd_connection.close()
         sql_connection.close()
-        pass

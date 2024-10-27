@@ -1,4 +1,7 @@
 #!/bin/bash
+# This script is specifically for running multiple instances and recording two SDRs at the same time
+# If you want to change any arguments just change them in this file. It does not handle passing in
+# arguments from the CLI.
 cd "$(dirname "$0")"
 cd ..
 
@@ -12,5 +15,3 @@ killgroup(){
 (rtl_433 -M level -M time -C customary -F json -f 315M -d 0 | ./env/bin/python3 scripts/record_tpms.py samples1.db) &
 (rtl_433 -M level -M time -C customary -F json -f 315M -d 1 | ./env/bin/python3 scripts/record_tpms.py samples2.db) &
 wait
-sleep 0.5
-echo "Done!"
