@@ -21,7 +21,14 @@ def process(data: str):
 
     # Construct final data tuple and write to local database
     try:
-        freq = tpms_data.get("freq") or tpms_data.get("freq1")
+        # FSK (Frequency Shift Key) will give multiple frequency codes
+        if tpms_data["mod"] == "FSK":
+            freq1 = tpms_data["freq1"]
+            freq2 = tpms_data["freq2"]
+        else:
+            freq1 = tpms_data["freq"]
+            freq2 = ""
+        # freq = tpms_data.get("freq") or tpms_data.get("freq1")
         output = (
                 tpms_data["time"], 
                 tpms_data["id"], 
@@ -32,7 +39,8 @@ def process(data: str):
                 tpms_data["noise"],
                 tpms_data["rssi"],
                 tpms_data["snr"],
-                freq
+                freq1,
+                freq2
                 )
     except:
         print(c.FAIL, "Received signal is not TPMS, got: ", c.ENDC, tpms_data)
@@ -49,8 +57,8 @@ def get_speed() -> float:
 def write_tpms_to_sql(data: tuple):
     cursor.execute('''
         INSERT INTO TPMSSamples
-        (timestamp, id, model, speed, temperature, pressure, noise, RSSI, SNR, frequency)
-        VALUES (?,?,?,?,?,?,?,?,?,?)
+        (timestamp, id, model, speed, temperature, pressure, noise, RSSI, SNR, freq1, freq2)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
     ''', data)
     sql_connection.commit()
     

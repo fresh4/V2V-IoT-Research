@@ -14,7 +14,8 @@ def create_tpms_table(filename="samples.db"):
                         noise REAL, 
                         RSSI REAL,
                         SNR REAL,
-                        frequency REAL
+                        freq1 REAL,
+                        freq2 REAL
                     )''')
     conn.commit()
     conn.close()
