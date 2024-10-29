@@ -8,8 +8,8 @@ input_file="${samples%.*}"
 if [ -n "$1" ]; then
     input_file="$1"
 fi
-output_file=$input_file
+output_file="${input_file##*/}" && output_file="${output_file%.*}"
 
-sqlite3 -header -csv ${input_file}.db "SELECT * FROM TPMSSamples;" > outputs/$output_file.csv 
+sqlite3 -header -csv ${input_file} "SELECT * FROM TPMSSamples;" > outputs/$output_file.csv 
 
 echo "Converted sql to csv under outputs/$output_file.csv"
