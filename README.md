@@ -7,7 +7,8 @@ The `setup.sh` script under `bash_scripts/` should set up your environment and d
 
 `rtl-433` version 23.11 or greater. Depending on your system, your package manager may have a lower version in its repositories. In that case you will need to manually install it from a repository that has the proper version.\
 `rtl-sdr` installed from the same repository as `rtl-433`, preferably. `rtl-433` depends on `rtl-sdr`, so they must both be up to date.\
-`sqlite3` for running sqlite commands.\
+`sqlite3` for running sqlite commands (used to convert database files to csv).\
+`netcat` to check if OBD Server is running.\
 `python3.10` or greater. You will need to create a virtual environment in python using venv (or conda) and install the dependencies in the `requirements.txt`
 
 ```
@@ -27,6 +28,11 @@ Your device will also need an OBD connection made from the car to read vehicle s
 
 With all requirements met, you should be able to record TPMS data. Use the `record_tpms.sh` script under the `bash_scripts/` directory to start. It will read 315MHz by default but this can be modified to any desired frequency. `record_tpms.sh -f 433.95M` will switch to reading on the 433.95 channel. Any arguments compatible with `rtl_433` will work if appended after the script, too. The script does run certain arguments by default, however, so check out the script.
 
+The `multi_record_tpms.sh` script will allow you to record from two separate SDRs at the same time with no further configuration. You of course need two SDRs plugged into your device.
+
 Decoded TPMS data will be saved under a local Sqlite database called `samples.db` in the project root directory. This format is great as it can be efficiently queried and filtered.
 
 You can convert the table itself to a more easily usable csv via the `tpms_csv.sh` script under `bash_scripts/` as well. It will be saved under the `outputs/` directory. You can specify a different file name using `tpms_csv.sh <filename>.csv` (extension optional).
+
+> NOTE: These scripts utilize OBD-II to capture vehicle speed. An OBD reader should be plugged in (or otherwise connected in the case of a Bluetooth OBD-II interface) but is optional. \
+> If you do decide to read OBD, you will need to make sure you are added to the `dialout` group. The `setup.sh` script should take care of this, and other dependencies, but you can make sure by running the `groups` command and checking if `dialout` is listed. If not you can run the command `sudo usermod -a -G dialout $USER`.
