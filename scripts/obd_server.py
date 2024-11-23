@@ -6,12 +6,15 @@ HOST = 'localhost'
 PORT = 48484
 
 def query_obd(command):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        s.sendall(str(command).encode('utf-8'))
-        data = s.recv(1024)
-        response = json.loads(data.decode('utf-8'))
-        return response
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            s.sendall(str(command).encode('utf-8'))
+            data = s.recv(1024)
+            response = json.loads(data.decode('utf-8'))
+            return response
+    except ConnectionRefusedError:
+        print("No OBD connection or server running.")
 
 def handle_client(conn):
     with conn:

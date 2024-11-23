@@ -69,7 +69,8 @@ def write_tpms_to_sql(data: tuple):
 
 def connect_obd() -> obd.OBD | bool:
     # Decide between a direct OBD connection or connecting to an OBD-II socket server
-    if "data" in query_obd("SPEED"):
+    query = query_obd("SPEED")
+    if query and "data" in query:
         # Server is running and connection is made, use socket.
         return True
     else:
