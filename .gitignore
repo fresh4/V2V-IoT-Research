@@ -4,3 +4,5 @@
 __pycache__
 *.csv
 outputs/
+*.cu8
+*.zip
